@@ -4,6 +4,7 @@
 
 ![Python](https://img.shields.io/badge/Python-3.8%2B-3776AB?logo=python&logoColor=white)
 ![Tkinter](https://img.shields.io/badge/GUI-Tkinter-informational)
+![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
 
 Interfaz gráfica sencilla que aplica la relación longitud–peso propuesta por **Rogers et al. (1976)** y utilizada posteriormente por **Stork & Blackburn (1993)** en estudios de artrópodos de bosque tropical.
 
@@ -17,9 +18,9 @@ $$
 
 | Símbolo | Significado |
 |---|---|
-| $b$ | Biomasa estimada |
+| $b$ | Biomasa estimada en peso seco (mg) |
 | $n$ | Abundancia (número de individuos) |
-| $l$ | Longitud corporal (cm) |
+| $l$ | Longitud corporal (mm) |
 
 ## ✨ Características
 
@@ -44,12 +45,16 @@ En Linux, si falta Tkinter: `sudo apt install python3-tk`.
 
 | Abundancia (n) | Longitud (l) | Biomasa |
 |---|---|---|
-| 5 | 6.5 | 20.56 |
+| 5 | 6.5 mm | 20.56 mg |
 
 ## 📚 Referencias
 
 - Rogers, L. E., Hinds, W. T. & Buschbom, R. L. (1976). A general weight vs. length relationship for insects. *Annals of the Entomological Society of America*, 69(2), 387–389.
 - Stork, N. E. & Blackburn, T. M. (1993). Abundance, body size and biomass of arthropods in tropical forest. *Oikos*, 67(3), 483–489.
+
+## 📄 Licencia
+
+Distribuido bajo la licencia MIT. Consulta [`LICENSE`](LICENSE) para más información.
 
 ## 👤 Autor
 

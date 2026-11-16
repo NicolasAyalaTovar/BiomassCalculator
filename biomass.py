@@ -5,8 +5,8 @@ applied by Stork & Blackburn (1993):
 
     biomass = n * (0.0305 * l ** 2.62)
 
-where ``n`` is the abundance (number of individuals) and ``l`` is the body
-length in centimetres.
+where ``n`` is the abundance (number of individuals), ``l`` is the body
+length in millimetres and the result is the dry biomass in milligrams.
 """
 
 import tkinter as tk
@@ -20,7 +20,7 @@ INFO_TEXT = (
     "This tool applies the biomass formula proposed by Rogers et al. (1976), "
     "later used by Stork and Blackburn (1993). It links the number of insects "
     "to their body length:\n\nb = n · (0.0305 · l^2.62)\n\n"
-    "where n = abundance and l = size (cm)."
+    "where n = abundance, l = body length (mm) and b = dry biomass (mg)."
 )
 
 REFERENCES_TEXT = (
@@ -32,11 +32,11 @@ REFERENCES_TEXT = (
 )
 
 
-def compute_biomass(abundance: int, length_cm: float) -> float:
-    """Return the estimated biomass for ``abundance`` insects of ``length_cm``."""
-    if abundance < 0 or length_cm <= 0:
+def compute_biomass(abundance: int, length_mm: float) -> float:
+    """Return the estimated dry biomass (mg) for ``abundance`` insects of ``length_mm``."""
+    if abundance < 0 or length_mm <= 0:
         raise ValueError("Abundance must be >= 0 and length must be > 0.")
-    return abundance * COEFFICIENT * length_cm ** EXPONENT
+    return abundance * COEFFICIENT * length_mm ** EXPONENT
 
 
 def is_integer(text: str) -> bool:
@@ -65,7 +65,7 @@ class BiomassApp:
                                          validatecommand=validate_int, font=FONT)
         self.abundance_entry.grid(row=1, column=1, sticky="w", padx=5, pady=5)
 
-        ttk.Label(frame, text="Size in centimetres (l):").grid(row=2, column=0, sticky="w", padx=5, pady=5)
+        ttk.Label(frame, text="Body length in millimetres (l):").grid(row=2, column=0, sticky="w", padx=5, pady=5)
         self.size_entry = ttk.Entry(frame, width=25, font=FONT)
         self.size_entry.grid(row=2, column=1, sticky="w", padx=5, pady=5)
 
@@ -90,7 +90,7 @@ class BiomassApp:
                 "Invalid input",
                 "Please enter a whole number for abundance and a positive number for size.")
             return
-        self.result_label.config(text=f"Biomass: {result:.2f}")
+        self.result_label.config(text=f"Biomass: {result:.2f} mg (dry weight)")
 
 
 def main() -> None:
