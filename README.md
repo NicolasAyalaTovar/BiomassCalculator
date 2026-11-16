@@ -1,31 +1,56 @@
-# Calculadora de Biomasa
+# 🪲 Biomass Calculator
 
-Esta es una calculadora de biomasa diseñada para utilizar la fórmula propuesta por Rogers et al, 1976, y utilizada posteriormente por Stork y Blackburn en su estudio. La fórmula relaciona el número de insectos con su tamaño (longitud).
+**Aplicación de escritorio para estimar la biomasa de insectos a partir de su abundancia y longitud corporal.**
 
-## Descripción
+![Python](https://img.shields.io/badge/Python-3.8%2B-3776AB?logo=python&logoColor=white)
+![Tkinter](https://img.shields.io/badge/GUI-Tkinter-informational)
 
-La fórmula para calcular la biomasa es la siguiente:
+Interfaz gráfica sencilla que aplica la relación longitud–peso propuesta por **Rogers et al. (1976)** y utilizada posteriormente por **Stork & Blackburn (1993)** en estudios de artrópodos de bosque tropical.
 
-\[ \text{biomasa} = n \times (0.0305 \times l^{2.62}) \]
+> ¿Prefieres trabajar en R o con tablas de muchas especies? Consulta la versión en R: [R-BiomassCalculator](https://github.com/NicolasAyalaTovar/R-BiomassCalculator).
 
-donde:
-- \( n \) es la abundancia
-- \( l \) es el tamaño en centímetros
+## 📐 Modelo
 
-## Características
+$$
+b = n \cdot \left(0.0305 \cdot l^{2.62}\right)
+$$
 
-- Interfaz gráfica amigable desarrollada con Tkinter.
-- Validación de entradas para asegurar que los valores introducidos sean numéricos.
-- Cálculo automático de la biomasa basado en la fórmula dada.
+| Símbolo | Significado |
+|---|---|
+| $b$ | Biomasa estimada |
+| $n$ | Abundancia (número de individuos) |
+| $l$ | Longitud corporal (cm) |
 
-## Uso
+## ✨ Características
 
-1. Clona el repositorio en tu máquina local.
-   ```bash
-   git clone https://github.com/TU_USUARIO/TU_REPOSITORIO.git
+- Interfaz gráfica con Tkinter, sin dependencias externas.
+- Validación de entradas: abundancia entera y longitud positiva (acepta coma o punto decimal).
+- Cálculo con la tecla **Enter** o con el botón.
+- Referencias bibliográficas visibles dentro de la aplicación.
 
-# Autor
-Nicolás Ayala Tovar
+## 🚀 Instalación y uso
 
-Este README incluye una descripción del proyecto, instrucciones de uso, referencias, y la información del autor. Puedes personalizarlo aún más según tus necesidades.
+Solo requiere Python 3.8+ con Tkinter (incluido en la instalación estándar de Python en Windows y macOS).
 
+```bash
+git clone https://github.com/NicolasAyalaTovar/BiomassCalculator.git
+cd BiomassCalculator
+python biomass.py
+```
+
+En Linux, si falta Tkinter: `sudo apt install python3-tk`.
+
+### Ejemplo
+
+| Abundancia (n) | Longitud (l) | Biomasa |
+|---|---|---|
+| 5 | 6.5 | 20.56 |
+
+## 📚 Referencias
+
+- Rogers, L. E., Hinds, W. T. & Buschbom, R. L. (1976). A general weight vs. length relationship for insects. *Annals of the Entomological Society of America*, 69(2), 387–389.
+- Stork, N. E. & Blackburn, T. M. (1993). Abundance, body size and biomass of arthropods in tropical forest. *Oikos*, 67(3), 483–489.
+
+## 👤 Autor
+
+**Nicolás Ayala Tovar** · [GitHub](https://github.com/NicolasAyalaTovar)

@@ -1,67 +1,103 @@
-import pandas as pd
-import numpy as np
+"""Biomass Calculator: desktop GUI for estimating insect biomass.
+
+Implements the length-weight relationship of Rogers et al. (1976), later
+applied by Stork & Blackburn (1993):
+
+    biomass = n * (0.0305 * l ** 2.62)
+
+where ``n`` is the abundance (number of individuals) and ``l`` is the body
+length in centimetres.
+"""
+
 import tkinter as tk
-from tkinter import ttk,font 
-from tkinter import messagebox
+from tkinter import messagebox, ttk
 
-def is_integer(input):
-    if input.isdigit() or input == "":
-        return True
-    else:
-        return False
+COEFFICIENT = 0.0305
+EXPONENT = 2.62
+FONT = ("Times New Roman", 12)
 
-# Function
-def calculate_biomass():
-    try:
-        n = int(abundance_entry.get())  
-        l = float(size_entry.get())
-        r1 = l**2.62
-        r2 = 0.0305 * r1
-        result = n * r2
-        result_label.config(text=f"Biomass: {result:.2f}")  
-    except ValueError:
-        messagebox.showerror("Error", "Please enter valid numerical values for abundance and size.")
+INFO_TEXT = (
+    "This tool applies the biomass formula proposed by Rogers et al. (1976), "
+    "later used by Stork and Blackburn (1993). It links the number of insects "
+    "to their body length:\n\nb = n · (0.0305 · l^2.62)\n\n"
+    "where n = abundance and l = size (cm)."
+)
 
-#Interface
-root = tk.Tk()
-root.title("Biomass Calculator")
-vcmd = (root.register(is_integer),'%P')
+REFERENCES_TEXT = (
+    "References:\n"
+    "• Rogers, L., Hinds, L. & Buschbom, R. (1976). A general weight vs length "
+    "relationship for insects. Ann. Entomol. Soc. Am. 69: 387-389.\n"
+    "• Stork, N. E. & Blackburn, T. M. (1993). Abundance, body size and biomass "
+    "of arthropods in tropical forest. Oikos 67: 483-489."
+)
 
-style = ttk.Style()
-style.configure("TLabel", font=('Times New Roman', 12))
-style.configure("TEntry", font=('Times New Roman', 12))
-style.configure("TButton", font=('Times New Roman', 12))
 
-frame = ttk.Frame(root, padding="20")
-frame.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
+def compute_biomass(abundance: int, length_cm: float) -> float:
+    """Return the estimated biomass for ``abundance`` insects of ``length_cm``."""
+    if abundance < 0 or length_cm <= 0:
+        raise ValueError("Abundance must be >= 0 and length must be > 0.")
+    return abundance * COEFFICIENT * length_cm ** EXPONENT
 
-info_text = ("This script is designed so you can use the formula for calculating biomass proposed "
-            "by Rogers et al, 1976, which was later used by Stork and Blackburn in their study. "
-            "The formula links the number of insects to their size (length) and is as follows: "
-            "b = n (0.0305*l^2.62) where n = Abundance and l = Size")
-info_label = tk.Label(frame, text=info_text, wraplength=500, font=('Times New Roman', 12), justify='center')
-info_label.grid(row=0, column=0, columnspan=2, sticky=tk.W, padx=5, pady=5)
 
-abundance_label = ttk.Label(frame, text="Abundance (n):")
-abundance_label.grid(row=1, column=0, sticky=tk.W, padx=5, pady=5)
-abundance_entry = ttk.Entry(frame, width=25, validate='key', validatecommand=vcmd, font=('Times New Roman', 12))
-abundance_entry.grid(row=1, column=1, sticky=tk.W, padx=5, pady=5)
+def is_integer(text: str) -> bool:
+    """Tk validation callback: allow only digits (or an empty field)."""
+    return text.isdigit() or text == ""
 
-size_label = ttk.Label(frame, text="Size in centimeters (l):")
-size_label.grid(row=2, column=0, sticky=tk.W, padx=5, pady=5)
-size_entry = ttk.Entry(frame, width=25, font=('Times New Roman', 12))
-size_entry.grid(row=2, column=1, sticky=tk.W, padx=5, pady=5)
 
-calculate_button = ttk.Button(frame, text="Calculate Biomass", command=calculate_biomass, style="TButton")
-calculate_button.grid(row=3, column=0, columnspan=2, pady=10)
+class BiomassApp:
+    def __init__(self, root: tk.Tk) -> None:
+        root.title("Biomass Calculator")
+        root.resizable(False, False)
 
-result_label = ttk.Label(frame, text="Biomass: ")
-result_label.grid(row=4, column=0, columnspan=2, sticky=tk.W, padx=5, pady=5)
+        style = ttk.Style()
+        for widget in ("TLabel", "TEntry", "TButton"):
+            style.configure(widget, font=FONT)
 
-references_text = ("References:\n"
-                "- Rogers, L., Hinds, L. y Buschbom, R. (1976) A general weight vs length relationships for insects. Ann. Entomol.Soc.Am. 69: 387-389.\n"
-                "- Stork, N. E. y Blackburn, T. M. (1993). Abundance, body size and biomass of arthropods in tropical forest. Oikos 67: 483-489.")
-references_label = tk.Label(frame, text=references_text, wraplength=500, font=('Times New Roman', 12), justify='left')
-references_label.grid(row=5, column=0, columnspan=2, sticky=tk.W, padx=5, pady=10)
+        frame = ttk.Frame(root, padding=20)
+        frame.grid(row=0, column=0, sticky="nsew")
 
-root.mainloop()
+        tk.Label(frame, text=INFO_TEXT, wraplength=500, font=FONT,
+                 justify="center").grid(row=0, column=0, columnspan=2, pady=5)
+
+        validate_int = (root.register(is_integer), "%P")
+        ttk.Label(frame, text="Abundance (n):").grid(row=1, column=0, sticky="w", padx=5, pady=5)
+        self.abundance_entry = ttk.Entry(frame, width=25, validate="key",
+                                         validatecommand=validate_int, font=FONT)
+        self.abundance_entry.grid(row=1, column=1, sticky="w", padx=5, pady=5)
+
+        ttk.Label(frame, text="Size in centimetres (l):").grid(row=2, column=0, sticky="w", padx=5, pady=5)
+        self.size_entry = ttk.Entry(frame, width=25, font=FONT)
+        self.size_entry.grid(row=2, column=1, sticky="w", padx=5, pady=5)
+
+        ttk.Button(frame, text="Calculate Biomass",
+                   command=self.calculate).grid(row=3, column=0, columnspan=2, pady=10)
+
+        self.result_label = ttk.Label(frame, text="Biomass: ")
+        self.result_label.grid(row=4, column=0, columnspan=2, sticky="w", padx=5, pady=5)
+
+        tk.Label(frame, text=REFERENCES_TEXT, wraplength=500, font=FONT,
+                 justify="left").grid(row=5, column=0, columnspan=2, sticky="w", padx=5, pady=10)
+
+        root.bind("<Return>", lambda _event: self.calculate())
+
+    def calculate(self) -> None:
+        try:
+            abundance = int(self.abundance_entry.get())
+            length = float(self.size_entry.get().replace(",", "."))
+            result = compute_biomass(abundance, length)
+        except ValueError:
+            messagebox.showerror(
+                "Invalid input",
+                "Please enter a whole number for abundance and a positive number for size.")
+            return
+        self.result_label.config(text=f"Biomass: {result:.2f}")
+
+
+def main() -> None:
+    root = tk.Tk()
+    BiomassApp(root)
+    root.mainloop()
+
+
+if __name__ == "__main__":
+    main()
